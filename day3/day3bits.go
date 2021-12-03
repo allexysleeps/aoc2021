@@ -82,7 +82,7 @@ func filterBits(nums []int, maj bool, pos int) int {
 
 func Part2bits() {
 	nums, ls := getInput()
-	wg := sync.WaitGroup{}
+	var wg sync.WaitGroup
 	var ogr, co2 int
 	wg.Add(2)
 	go func() {

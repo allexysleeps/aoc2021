@@ -6,6 +6,7 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 func getInput() ([]int, int) {
@@ -81,7 +82,16 @@ func filterBits(nums []int, maj bool, pos int) int {
 
 func Part2bits() {
 	nums, ls := getInput()
-	ogr := filterBits(nums, true, ls-1)
-	co2 := filterBits(nums, false, ls-1)
+	wg := sync.WaitGroup{}
+	var ogr, co2 int
+	go func() {
+		ogr = filterBits(nums, true, ls-1)
+		wg.Add(1)
+	}()
+	go func() {
+		co2 = filterBits(nums, false, ls-1)
+		wg.Add(2)
+	}()
+	wg.Wait()
 	fmt.Printf("day 3, part 2: %d\n", ogr*co2)
 }

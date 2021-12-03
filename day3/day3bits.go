@@ -43,12 +43,12 @@ func Part1bits() {
 
 	for i := range sums {
 		if sums[i] > len(nums)/2 {
-			gamma |= 1 << (i)
-			epsilon |= 0 << (i)
+			gamma |= 1 << i
+			epsilon |= 0 << i
 			continue
 		}
-		gamma |= 0 << (i)
-		epsilon |= 1 << (i)
+		gamma |= 0 << i
+		epsilon |= 1 << i
 	}
 	fmt.Printf("day 3, part 1: %d\n", gamma*epsilon)
 }

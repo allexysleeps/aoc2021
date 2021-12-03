@@ -7,15 +7,13 @@ import (
 	"strings"
 )
 
-var lineSize int
-
 func getInputMatrix() ([][]int, int) {
 	input, err := ioutil.ReadFile("day3/input.txt")
 	if err != nil {
 		panic(err)
 	}
 	lines := strings.Split(string(input), "\n")
-	lineSize = len(lines[0])
+	lineSize := len(lines[0])
 	mtrx := make([][]int, 0, len(lines))
 
 	for _, l := range lines {

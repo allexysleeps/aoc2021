@@ -11,5 +11,5 @@ func main() {
 	day4.Part1()
 	day4.Part2()
 	elapsed := time.Since(start)
-	fmt.Printf("strings time took: %s\n", elapsed)
+	fmt.Printf("time took: %s\n", elapsed)
 }

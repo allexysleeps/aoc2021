@@ -3,7 +3,6 @@ package day4
 import (
 	"fmt"
 	"io/ioutil"
-	"regexp"
 	"strconv"
 	"strings"
 )
@@ -53,12 +52,9 @@ func createBoard() *board {
 	return &b
 }
 
-func getNumLine(str, sep string) []int {
-	space := regexp.MustCompile(`\s+`)
-	s := strings.Trim(space.ReplaceAllString(str, " "), " ")
-	numsLine := strings.Split(s, sep)
-	nums := make([]int, 0, len(numsLine))
-	for _, n := range numsLine {
+func getNumLine(strNums []string) []int {
+	nums := make([]int, 0, len(strNums))
+	for _, n := range strNums {
 		num, _ := strconv.Atoi(n)
 		nums = append(nums, num)
 	}
@@ -68,7 +64,7 @@ func getNumLine(str, sep string) []int {
 func getInput() ([]int, []*board) {
 	input, _ := ioutil.ReadFile("day4/input.txt")
 	lines := strings.Split(string(input), "\n")
-	nums := getNumLine(lines[0], ",")
+	nums := getNumLine(strings.Split(lines[0], ","))
 
 	boards := make([]*board, 0)
 	k := 0
@@ -80,7 +76,7 @@ func getInput() ([]int, []*board) {
 			b = createBoard()
 			continue
 		}
-		n := getNumLine(lines[i], " ")
+		n := getNumLine(strings.Fields(lines[i]))
 		b.nums = append(b.nums, n)
 		k++
 	}

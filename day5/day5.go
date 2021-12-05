@@ -39,27 +39,18 @@ func minMax(a, b int) (int, int) {
 func traverse(line []int, hsh map[int]int, incDiagonal bool) {
 	x1, y1, x2, y2 := line[0], line[1], line[2], line[3]
 
-	if x1 == x2 {
+	switch {
+	case x1 == x2:
 		min, max := minMax(y1, y2)
 		for y := min; y <= max; y++ {
 			hsh[x1*offset+y]++
 		}
-		return
-	}
-
-	if y1 == y2 {
+	case y1 == y2:
 		min, max := minMax(x1, x2)
 		for x := min; x <= max; x++ {
 			hsh[x*offset+y1]++
 		}
-		return
-	}
-
-	if !incDiagonal {
-		return
-	}
-
-	if math.Abs(float64(x1-x2)) == math.Abs(float64(y1-y2)) {
+	case incDiagonal && (math.Abs(float64(x1-x2)) == math.Abs(float64(y1-y2))):
 		minX, maxX := minMax(x1, x2)
 		m := (y2 - y1) / (x2 - x1)
 		b := y1 - (m * x1)
@@ -89,13 +80,10 @@ func process(incDiagonal bool) int {
 
 func Part1() {
 	res := process(false)
-	fmt.Printf("day 5, part 1: %d\n", res)
+	fmt.Printf("day 5, part 1: %d\n", res) // 22335
 }
 
 func Part2() {
 	res := process(true)
-	fmt.Printf("day 5, part 2: %d\n", res)
+	fmt.Printf("day 5, part 2: %d\n", res) // 22335
 }
-
-// 6397
-// 22335

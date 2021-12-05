@@ -9,6 +9,8 @@ import (
 	"unicode"
 )
 
+const offset = 1000
+
 func getInput() [][]int {
 	input, _ := ioutil.ReadFile("day5/input.txt")
 	lines := strings.Split(string(input), "\n")
@@ -34,13 +36,13 @@ func minMax(a, b int) (int, int) {
 	return a, b
 }
 
-func traverse(line []int, hsh map[string]int, incDiagonal bool) {
+func traverse(line []int, hsh map[int]int, incDiagonal bool) {
 	x1, y1, x2, y2 := line[0], line[1], line[2], line[3]
 
 	if x1 == x2 {
 		min, max := minMax(y1, y2)
 		for y := min; y <= max; y++ {
-			hsh[fmt.Sprintf("%d,%d", x1, y)]++
+			hsh[x1*offset+y]++
 		}
 		return
 	}
@@ -48,7 +50,7 @@ func traverse(line []int, hsh map[string]int, incDiagonal bool) {
 	if y1 == y2 {
 		min, max := minMax(x1, x2)
 		for x := min; x <= max; x++ {
-			hsh[fmt.Sprintf("%d,%d", x, y1)]++
+			hsh[x*offset+y1]++
 		}
 		return
 	}
@@ -63,17 +65,19 @@ func traverse(line []int, hsh map[string]int, incDiagonal bool) {
 		b := y1 - (m * x1)
 		for x := minX; x <= maxX; x++ {
 			y := m*x + b
-			hsh[fmt.Sprintf("%d,%d", x, y)]++
+			hsh[x*offset+y]++
 		}
 	}
 }
 
 func process(incDiagonal bool) int {
 	lines := getInput()
-	hsh := make(map[string]int)
+	hsh := make(map[int]int)
+
 	for _, l := range lines {
 		traverse(l, hsh, incDiagonal)
 	}
+
 	var dPoints int
 	for _, v := range hsh {
 		if v > 1 {

@@ -44,12 +44,8 @@ func countOffSpring(cycle, days int, cache map[int]int) int {
 		return fish
 	}
 
-	rem := remDays % fullCycle
+	offsprings := (remDays - 1) / (fullCycle)
 
-	offsprings := (remDays) / (fullCycle)
-	if rem == 0 {
-		offsprings--
-	}
 	for i := 1; i <= offsprings; i++ {
 		fish += countOffSpring(fullCycle+maturing, remDays-fullCycle*i, cache)
 	}
@@ -68,8 +64,8 @@ func process(n int) int {
 }
 
 func Part1() {
-	fmt.Printf("day 4, part 1: %d\n", process(80))
+	fmt.Printf("day 6, part 1: %d\n", process(80))
 }
 func Part2() {
-	fmt.Printf("day 4, part 1: %d\n", process(256))
+	fmt.Printf("day 6, part 2: %d\n", process(256))
 }

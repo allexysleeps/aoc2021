@@ -3,96 +3,96 @@ package day3
 import (
 	"fmt"
 	"io/ioutil"
+	"math"
 	"strconv"
 	"strings"
+	"sync"
 )
 
-func getInputMatrix() ([][]int, int) {
+func getInput() ([]int, int) {
 	input, err := ioutil.ReadFile("day3/input.txt")
 	if err != nil {
 		panic(err)
 	}
 	lines := strings.Split(string(input), "\n")
-	lineSize := len(lines[0])
-	mtrx := make([][]int, 0, len(lines))
-
+	ls := len(lines[0])
+	nums := make([]int, 0, len(lines))
 	for _, l := range lines {
-		row := make([]int, 0, lineSize)
-		for i := 0; i < lineSize; i++ {
-			bit, _ := strconv.Atoi(string(l[i]))
-			row = append(row, bit)
-		}
-		mtrx = append(mtrx, row)
+		n, _ := strconv.ParseInt(l, 2, 64)
+		nums = append(nums, int(n))
 	}
-	return mtrx, lineSize
+	return nums, ls
+}
+
+func hasBit(num, pos int) bool {
+	return num&int(math.Pow(2, float64(pos))) != 0
 }
 
 func Part1() {
-	mtrx, lineSize := getInputMatrix()
-	size := len(mtrx)
-	sum := make([]int, lineSize)
-	for _, m := range mtrx {
-		for j := range sum {
-			sum[j] += m[j]
+	nums, ls := getInput()
+	sums := make([]int, ls)
+	for _, n := range nums {
+		for i := range sums {
+			if hasBit(n, i) {
+				sums[i] += 1
+			}
 		}
 	}
-	var gamma, epsilon string
-	for i := range sum {
-		if sum[i] > size/2 {
-			gamma += "1"
-			epsilon += "0"
+
+	var gamma int
+	var epsilon int
+
+	for i := range sums {
+		if sums[i] > len(nums)/2 {
+			gamma |= 1 << i
+			epsilon |= 0 << i
 			continue
 		}
-		gamma += "0"
-		epsilon += "1"
+		gamma |= 0 << i
+		epsilon |= 1 << i
 	}
-	g, _ := strconv.ParseInt(gamma, 2, 64)
-	e, _ := strconv.ParseInt(epsilon, 2, 64)
-	fmt.Printf("day 3, part 1: %d\n", g*e)
+	fmt.Printf("day 3, part 1: %d\n", gamma*epsilon)
 }
 
-func filter(mtrx [][]int, maj bool, pos int) []int {
-	size := len(mtrx)
+func filter(nums []int, maj bool, pos int) int {
+	size := len(nums)
 	if size == 1 {
-		return mtrx[0]
+		return nums[0]
 	}
-	ones := make([][]int, 0, size/2)
-	zeros := make([][]int, 0, size/2)
-	for _, m := range mtrx {
-		if m[pos] == 1 {
-			ones = append(ones, m)
+	ones := make([]int, 0, size/2)
+	zeros := make([]int, 0, size/2)
+	for _, n := range nums {
+		if hasBit(n, pos) {
+			ones = append(ones, n)
 			continue
 		}
-		zeros = append(zeros, m)
+		zeros = append(zeros, n)
 	}
-
-	if maj {
-		if len(ones) >= len(zeros) {
-			return filter(ones, maj, pos+1)
-		}
-		return filter(zeros, maj, pos+1)
+	switch {
+	case maj && (len(ones) >= len(zeros)):
+		return filter(ones, maj, pos-1)
+	case maj:
+		return filter(zeros, maj, pos-1)
+	case !maj && (len(ones) < len(zeros)):
+		return filter(ones, maj, pos-1)
+	default:
+		return filter(zeros, maj, pos-1)
 	}
-
-	if len(ones) < len(zeros) {
-		return filter(ones, maj, pos+1)
-	}
-	return filter(zeros, maj, pos+1)
 }
 
 func Part2() {
-	mtrx, _ := getInputMatrix()
-	ogr := filter(mtrx, true, 0)
-	co2 := filter(mtrx, false, 0)
-
-	var ogrb, co2b string
-
-	for i := range ogr {
-		ogrb += fmt.Sprintf("%d", ogr[i])
-		co2b += fmt.Sprintf("%d", co2[i])
-	}
-
-	ogrd, _ := strconv.ParseInt(ogrb, 2, 64)
-	co2d, _ := strconv.ParseInt(co2b, 2, 64)
-
-	fmt.Printf("day 3, part 2: %d\n", ogrd*co2d)
+	nums, ls := getInput()
+	var wg sync.WaitGroup
+	var ogr, co2 int
+	wg.Add(2)
+	go func() {
+		ogr = filter(nums, true, ls-1)
+		wg.Done()
+	}()
+	go func() {
+		co2 = filter(nums, false, ls-1)
+		wg.Done()
+	}()
+	wg.Wait()
+	fmt.Printf("day 3, part 2: %d\n", ogr*co2)
 }

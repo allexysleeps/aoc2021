@@ -80,7 +80,7 @@ func process(incDiagonal bool) int {
 
 func Part1() {
 	res := process(false)
-	fmt.Printf("day 5, part 1: %d\n", res) // 22335
+	fmt.Printf("day 5, part 1: %d\n", res) // 6397
 }
 
 func Part2() {

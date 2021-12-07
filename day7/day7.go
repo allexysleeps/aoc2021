@@ -33,18 +33,6 @@ func minMax(pos []int) (int, int) {
 	return min, max
 }
 
-func sumtorial(n int, cache map[int]int) int {
-	v, ok := cache[n]
-	if ok {
-		return v
-	}
-	sum := 0
-	for i := 1; i <= n; i++ {
-		sum += i
-	}
-	return sum
-}
-
 func Part1() {
 	positions := getInput()
 	min, max := minMax(positions)
@@ -68,12 +56,11 @@ func Part2() {
 	min, max := minMax(positions)
 
 	minSum := 0
-	cache := make(map[int]int)
 	for i := min; i <= max; i++ {
 		sum := 0
 		for _, p := range positions {
 			steps := int(math.Abs(float64(i - p)))
-			sum += sumtorial(steps, cache)
+			sum += steps*(steps+1)/2
 		}
 		if sum < minSum || i == min {
 			minSum = sum

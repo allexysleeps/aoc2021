@@ -89,7 +89,7 @@ func decodeNumWithSize(comp string, encoded []string, size int) string {
 
 func getDecoder(line []string) map[string]string {
 	var one, four, seven, eight string
-	encoded := make([]string, 0)
+	encoded := make([]string, 0, len(line)-4)
 	for _, s := range line {
 		switch len(s) {
 		case 2:

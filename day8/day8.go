@@ -16,8 +16,8 @@ func getInput() [][]string {
 	vals := make([][]string, 0, len(lines))
 
 	for _, l := range lines {
-		inOut := strings.Split(l, "|")
-		vals = append(vals, append(strings.Fields(inOut[0]), strings.Fields(inOut[1])...))
+		s := strings.Replace(l, "|", "", 1)
+		vals = append(vals, strings.Fields(s))
 	}
 	return vals
 }
@@ -75,49 +75,49 @@ func uniqChars(s1, s2 string) string {
 	return uniq
 }
 
-func decodeNumWithSize(comp string, encoded []string, size int) (string, string) {
+func decodeNumWithSize(comp string, encoded []string, size int) string {
 	for _, enc := range encoded {
 		if len(enc) == size {
 			u := uniqChars(comp, enc)
 			if len(u) == 1 {
-				return u, enc
+				return u
 			}
 		}
 	}
-	return "", ""
+	return ""
 }
 
-func decodeLine(line []string) map[string]string {
-	swaps := make(map[string]string)
-	numCodes := make([]string, 10)
+func getDecoder(line []string) map[string]string {
+	var one, four, seven, eight string
 	encoded := make([]string, 0)
 	for _, s := range line {
 		switch len(s) {
 		case 2:
-			numCodes[1] = s
+			one = s
 		case 4:
-			numCodes[4] = s
+			four = s
 		case 3:
-			numCodes[7] = s
+			seven = s
 		case 7:
-			numCodes[8] = s
+			eight = s
 		default:
 			encoded = append(encoded, s)
 		}
 	}
 
-	swaps["a"] = uniqChars(numCodes[1], numCodes[7])
-	swaps["g"], numCodes[9] = decodeNumWithSize(numCodes[4]+swaps["a"], encoded, 6)
-	swaps["d"], numCodes[3] = decodeNumWithSize(numCodes[7]+swaps["g"], encoded, 5)
-	swaps["b"] = uniqChars(numCodes[1]+swaps["d"], numCodes[4])
-	zeroCode := strings.Replace(numCodes[8], swaps["d"], "", 1)
-	swaps["e"] = uniqChars(numCodes[7]+swaps["b"]+swaps["g"], zeroCode)
-	swaps["f"], numCodes[6] = decodeNumWithSize(swaps["a"]+swaps["b"]+swaps["d"]+swaps["g"]+swaps["e"], encoded, 6)
-	swaps["c"] = strings.Replace(numCodes[1], swaps["f"], "", 1)
+	swp := make(map[string]string)
+
+	swp["a"] = uniqChars(one, seven)
+	swp["g"] = decodeNumWithSize(four+swp["a"], encoded, 6)
+	swp["d"] = decodeNumWithSize(seven+swp["g"], encoded, 5)
+	swp["b"] = uniqChars(one+swp["d"], four)
+	zero := strings.Replace(eight, swp["d"], "", 1)
+	swp["e"] = uniqChars(seven+swp["b"]+swp["g"], zero)
+	swp["f"] = decodeNumWithSize(swp["a"]+swp["b"]+swp["d"]+swp["g"]+swp["e"], encoded, 6)
+	swp["c"] = strings.Replace(one, swp["f"], "", 1)
 
 	decoder := make(map[string]string)
-
-	for k, v := range swaps {
+	for k, v := range swp {
 		decoder[v] = k
 	}
 
@@ -128,12 +128,12 @@ func Part2() {
 	lines := getInput()
 	sum := 0
 	for _, l := range lines {
-		decoder := decodeLine(l)
-		numS := ""
+		decoder := getDecoder(l)
+		strNum := ""
 		for _, code := range l[inpSize:] {
-			numS += decodeNum(code, decoder)
+			strNum += decodeNum(code, decoder)
 		}
-		n, _ := strconv.Atoi(numS)
+		n, _ := strconv.Atoi(strNum)
 		sum += n
 	}
 	fmt.Println(sum)

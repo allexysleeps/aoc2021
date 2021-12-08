@@ -8,7 +8,6 @@ import (
 	"strings"
 )
 
-const outSize = 4
 const inpSize = 10
 
 func getInput() [][]string {
@@ -76,6 +75,18 @@ func uniqChars(s1, s2 string) string {
 	return uniq
 }
 
+func decodeNumWithSize(comp string, encoded []string, size int) (string, string) {
+	for _, enc := range encoded {
+		if len(enc) == size {
+			u := uniqChars(comp, enc)
+			if len(u) == 1 {
+				return u, enc
+			}
+		}
+	}
+	return "", ""
+}
+
 func decodeLine(line []string) map[string]string {
 	swaps := make(map[string]string)
 	numCodes := make([]string, 10)
@@ -96,45 +107,12 @@ func decodeLine(line []string) map[string]string {
 	}
 
 	swaps["a"] = uniqChars(numCodes[1], numCodes[7])
-
-	for _, enc := range encoded {
-		if len(enc) == 6 {
-			u := uniqChars(numCodes[4]+swaps["a"], enc)
-			if len(u) == 1 {
-				swaps["g"] = u
-				numCodes[9] = enc
-				break
-			}
-		}
-	}
-
-	for _, enc := range encoded {
-		if len(enc) == 5 {
-			u := uniqChars(numCodes[7]+swaps["g"], enc)
-			if len(u) == 1 {
-				swaps["d"] = u
-				numCodes[3] = enc
-				break
-			}
-		}
-	}
-
+	swaps["g"], numCodes[9] = decodeNumWithSize(numCodes[4]+swaps["a"], encoded, 6)
+	swaps["d"], numCodes[3] = decodeNumWithSize(numCodes[7]+swaps["g"], encoded, 5)
 	swaps["b"] = uniqChars(numCodes[1]+swaps["d"], numCodes[4])
-
 	zeroCode := strings.Replace(numCodes[8], swaps["d"], "", 1)
 	swaps["e"] = uniqChars(numCodes[7]+swaps["b"]+swaps["g"], zeroCode)
-
-	for _, enc := range encoded {
-		if len(enc) == 6 {
-			u := uniqChars(swaps["a"]+swaps["b"]+swaps["d"]+swaps["g"]+swaps["e"], enc)
-			if len(u) == 1 {
-				swaps["f"] = u
-				numCodes[6] = enc
-				break
-			}
-		}
-	}
-
+	swaps["f"], numCodes[6] = decodeNumWithSize(swaps["a"]+swaps["b"]+swaps["d"]+swaps["g"]+swaps["e"], encoded, 6)
 	swaps["c"] = strings.Replace(numCodes[1], swaps["f"], "", 1)
 
 	decoder := make(map[string]string)

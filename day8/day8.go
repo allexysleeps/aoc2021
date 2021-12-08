@@ -33,23 +33,23 @@ func Part1() {
 			}
 		}
 	}
-	fmt.Println(sum)
+	fmt.Printf("day 8, part 1: %d\n", sum)
+}
+
+var numCodes = map[string]string{
+	"abcefg":  "0",
+	"cf":      "1",
+	"acdeg":   "2",
+	"acdfg":   "3",
+	"bcdf":    "4",
+	"abdfg":   "5",
+	"abdefg":  "6",
+	"acf":     "7",
+	"abcdefg": "8",
+	"abcdfg":  "9",
 }
 
 func decodeNum(code string, decoder map[string]string) string {
-	var numCodes = map[string]string{
-		"abcefg":  "0",
-		"cf":      "1",
-		"acdeg":   "2",
-		"acdfg":   "3",
-		"bcdf":    "4",
-		"abdfg":   "5",
-		"abdefg":  "6",
-		"acf":     "7",
-		"abcdefg": "8",
-		"abcdfg":  "9",
-	}
-
 	decoded := ""
 	for _, r := range code {
 		s := string(r)
@@ -136,5 +136,5 @@ func Part2() {
 		n, _ := strconv.Atoi(strNum)
 		sum += n
 	}
-	fmt.Println(sum)
+	fmt.Printf("day 8, part 2: %d\n", sum)
 }

@@ -8,7 +8,7 @@ import (
 
 func main() {
 	start := time.Now()
-	//day8.Part1()
+	day8.Part1()
 	day8.Part2()
 	elapsed := time.Since(start)
 	fmt.Printf("time took: %s\n", elapsed)

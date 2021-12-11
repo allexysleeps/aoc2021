@@ -60,7 +60,7 @@ func Part1() {
 		}
 	}
 
-	fmt.Println(sum)
+	fmt.Printf("day 10, part 1: %d\n", sum)
 }
 
 func Part2() {
@@ -78,5 +78,5 @@ func Part2() {
 		scores = append(scores, sum)
 	}
 	sort.Ints(scores)
-	fmt.Println(scores[len(scores)/2])
+	fmt.Printf("day 10, part 2: %d\n", scores[len(scores)/2])
 }

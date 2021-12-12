@@ -67,7 +67,7 @@ func Part1() {
 		flashed := make(map[int]struct{})
 		sum += countStep(mtrx, flashed)
 	}
-	fmt.Println(sum)
+	fmt.Printf("day 11, part 1: %d\n", sum)
 }
 
 func Part2() {
@@ -81,5 +81,5 @@ func Part2() {
 			break
 		}
 	}
-	fmt.Println(step)
+	fmt.Printf("day 11, part 2: %d\n", step)
 }

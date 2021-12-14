@@ -82,11 +82,11 @@ func Part2() {
 		foldCache = make(map[int]struct{})
 		for _, p := range points {
 			fp := p.fold(f)
-			_, ok := foldCache[p.x*100 + p.y]
+			_, ok := foldCache[p.x*10000+p.y]
 			if ok {
 				continue
 			}
-			foldCache[fp.x*100 + fp.y] = struct{}{}
+			foldCache[fp.x*10000+fp.y] = struct{}{}
 			folded = append(folded, fp)
 		}
 		points = folded
@@ -95,7 +95,7 @@ func Part2() {
 	fmt.Printf("day 13, part 2:\n")
 	for i := 0; i < 6; i++ {
 		for j := 0; j < 39; j++ {
-			idx := j*100 + i
+			idx := j*10000 + i
 			_, ok := foldCache[idx]
 			if ok {
 				fmt.Printf("#")

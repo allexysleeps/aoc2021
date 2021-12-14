@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/allexysleeps/aoc2021/day13"
+	"github.com/allexysleeps/aoc2021/day14"
 	"time"
 )
 
 func main() {
 	start := time.Now()
-	day13.Part1()
-	day13.Part2()
+	day14.Part1()
+	day14.Part2()
 	elapsed := time.Since(start)
 	fmt.Printf("time took: %s\n", elapsed)
 }

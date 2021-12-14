@@ -17,23 +17,6 @@ func getInput() (string, map[string]string) {
 	return lines[0], rules
 }
 
-func insert(poly string, rules map[string]string)string {
-	var inserted string
-	for i := 0; i < len(poly) - 1; i++ {
-		pair := poly[i:i+2]
-		v, ok := rules[pair]
-		if !ok {
-			continue
-		}
-		if i == 0 {
-			inserted += string(pair[0]) + v + string(pair[1])
-			continue
-		}
-		inserted += v + string(pair[1])
-	}
-	return inserted
-}
-
 func solve(n int)int {
 	polymer, rules := getInput()
 	chars := make(map[string]int)
